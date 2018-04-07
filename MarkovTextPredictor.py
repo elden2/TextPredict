@@ -29,13 +29,10 @@ class Predictor(object):
 		self.get_trip()
 		self.pair_dictionary_tripples()
 
-
 		self.doubles = []
 		self.doubles_target = []
 		self.get_doubles()
 		self.pair_dictionary_doubles()
-
-
 
 		self.single_pair()
 		self.random = random
@@ -90,27 +87,29 @@ class Predictor(object):
 
 	def predict_word(self, key = 'three word form', noise = False):
 		a = key.split()
-		temp= a[1]+ ' ' + a[2]
-		temp2 = a[2]
-		if temp in self.dictionary_doubles.keys():
+		temp3 = a[0]+ ' ' + a[1] + ' ' + a[2] 
+		temp2 = a[1]+ ' ' + a[2]
+		temp1 = a[2]
+		if temp3 in self.dictionary_tripple.keys():
+			self.error_count[0] += 1
+			return self.common_word(self.dictionary_tripple[temp3], noise = noise)
+		if temp2 in self.dictionary_doubles.keys():
 			self.error_count[1] += 1
-			return self.common_word(self.dictionary_doubles[temp], noise = noise)
-		if a[2] in self.dictionary_single.keys():
+			return self.common_word(self.dictionary_doubles[temp2], noise = noise)
+		if temp1 in self.dictionary_single.keys():
 			self.error_count[2] += 1
 			return self.common_word(self.dictionary_single[a[2]], noise = noise)
 		self.error_count[3] += 1
 		return self.dictionary_tripple[random.choice(self.dictionary_tripple.keys())][0]
 			
 
-
 	def get_promt(self, sentence, length = 3):
 		a = sentence.split()
 		prompt = ''
 		for i in a[-(length):]:
+
 			prompt += i + ' '
 		return prompt[:-1]
-
-
 	def predict_sentence(self, initial = 'who knows what', chain_length = 3, parg_length = 1000):
 		sentence = initial
 		for i in range(0, parg_length):
@@ -120,16 +119,18 @@ class Predictor(object):
 			else:
 				prompt = self.get_promt(sentence, length= chain_length)
 				sentence += ' ' + self.predict_word(prompt, noise = False)
-		return sentence
+		return sentence, self.error_count
 			
 
 
-with open('./Texts/moby.txt', 'r') as temp:
+with open('moby.txt', 'r') as temp:
 	moby = temp.read().replace('\n', '')
 
-
 Moby_dick = Predictor(moby, random = 10)
+print Moby_dick.dictionary_single['Whale']
 
-print Moby_dick.predict_sentence('a Sperm Whale',parg_length=100)
+# c,d = Moby_dick.predict_sentence('a Sperm Whale',parg_length=100)
+# print c
+# print d
 
 
