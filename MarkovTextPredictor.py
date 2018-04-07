@@ -2,11 +2,6 @@ import random
 import sys
 import os
 from itertools import groupby
-import pickle
-
-
-#The naming of this as a tree is a bit of a misnomer.  I origionally tried to write
-#this as a tree, with each word a branch, but a dictionary wound up being easier
 
 #The depth represents the number of words in the depth of the markov change.
 #I plan on changing this later so that it can be any number, but as of now it only works as a tripplet.
